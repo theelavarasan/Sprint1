@@ -2,7 +2,10 @@ package com.ZenPack.service.Services;
 
 import java.util.List;
 
+import com.ZenPack.Dto.ZenPackReportDto;
 import com.ZenPack.exception.ZenPackException;
+import com.ZenPack.model.Report;
+import com.ZenPack.model.ZenPackReport;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -27,4 +30,8 @@ public interface  ZenPackService {
     Page<ZenPack> searchZenPack(SearchRequest request);
 
     String setActiveOrInActive(Long zenPackId);
+
+    ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto);
+
+    List<Report> getAllReports();
 }

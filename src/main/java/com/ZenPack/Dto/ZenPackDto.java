@@ -20,4 +20,5 @@ public class ZenPackDto {
     private String updatedTime;
     private List<MenuDto> menus;
     private List<FeatureDto> features;
+    private Boolean inActive=false;
 }

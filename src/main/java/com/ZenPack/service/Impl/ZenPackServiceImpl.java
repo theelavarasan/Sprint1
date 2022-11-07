@@ -1,22 +1,29 @@
 package com.ZenPack.service.Impl;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import com.ZenPack.Dto.ZenPackReportDto;
+import com.ZenPack.Specification.SortDirection;
 import com.ZenPack.exception.ZenPackException;
+import com.ZenPack.model.*;
+import com.ZenPack.repository.*;
+import com.ZenPack.utils.CommonFunctions;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,10 +31,6 @@ import org.springframework.stereotype.Service;
 import com.ZenPack.Dto.ZenPackDto;
 import com.ZenPack.Specification.SearchRequest;
 import com.ZenPack.Specification.SearchSpecification;
-import com.ZenPack.model.ReportHeader;
-import com.ZenPack.model.ZenPack;
-import com.ZenPack.repository.ReportHeaderRepository;
-import com.ZenPack.repository.ZenPackRepository;
 import com.ZenPack.service.Services.ZenPackService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -45,13 +48,25 @@ public class ZenPackServiceImpl implements ZenPackService {
 	private ReportHeaderRepository reportHeaderRepo;
 
 	@Autowired
+	private ZenPackReportRepository zenPackReportRepository;
+
+	@Autowired
 	private EntityManager manager;
+
+	@Autowired
+	private ReportRepository reportRepository;
+
+	@Autowired
+	private ReportColumnsRepository reportColumnsRepository;
+
+	@Autowired
+	private CommonFunctions commonFunctions;
 
 	private static final Logger logger = LoggerFactory.getLogger(ZenPackServiceImpl.class);
 
-	LocalDateTime myDateObj = LocalDateTime.now();
-	DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-	String formattedDate = myDateObj.format(myFormatObj);
+//	LocalDateTime myDateObj = LocalDateTime.now(Clock.systemUTC());
+//	DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+//	String formattedDate = myDateObj.format(myFormatObj);
 
 	@Override
 	public ResponseEntity<ZenPack> saveZenPack(ZenPack zenPack) {
@@ -69,8 +84,8 @@ public class ZenPackServiceImpl implements ZenPackService {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setAmbiguityIgnored(true);
 		ZenPack zenPack = mapper.map(zenPackDto, ZenPack.class);
-		zenPack.setCreatedDate(formattedDate);
-		zenPack.setUpdatedTime(formattedDate);
+		zenPack.setCreatedDate(commonFunctions.getUtcDateTime());
+		zenPack.setUpdatedTime(commonFunctions.getUtcDateTime());
 		repository.save(zenPack);
 		zenPackDto.setZenPackId(zenPack.getZenPackId());
 		zenPackDto.setCreatedDate(zenPack.getCreatedDate());
@@ -136,8 +151,10 @@ public class ZenPackServiceImpl implements ZenPackService {
 	@Override
 	public Page<ZenPack> searchZenPack(SearchRequest request) {
 		SearchSpecification<ZenPack> specification = new SearchSpecification<>(request);
+		SortDirection sortDirection=SortDirection.valueOf("name");
 		Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-		return repository.findAll(specification, pageable);
+		return repository.findAll(pageable);
+//		return repository.findAll(specification, pageable);
 	}
 
 	@Override
@@ -148,6 +165,26 @@ public class ZenPackServiceImpl implements ZenPackService {
 			repository.save(entity.get());
 		}
 		return "ZenPack "+zenPackId+" Set InActive Successful";
+	}
+
+	@Override
+	public ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto) {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setAmbiguityIgnored(true);
+		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
+		zenPackReportRepository.save(zenPackReport);
+		zenPackReportDto.setId(zenPackReport.getId());
+		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
+		zenPackReportDto.setQuickAccess(zenPackReport.isAnalytics());
+		zenPackReportDto.setDashBoard(zenPackReport.isDashBoard());
+		zenPackReport.setAddToFavorite(zenPackReport.isAddToFavorite());
+		zenPackReport.setFavoriteViewName(zenPackReport.getFavoriteViewName());
+		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
+	}
+
+	@Override
+	public List<Report> getAllReports() {
+		return reportRepository.findAll();
 	}
 
 	public ReportHeader createReportHeader(final ReportHeader reportHeader) {
@@ -177,5 +214,26 @@ public class ZenPackServiceImpl implements ZenPackService {
 			return reportHeader.get();
 		}
 		return null;
+	}
+
+	public String setActiveOrInActive(Boolean inActive, Long zenPackId) {
+		Optional<ZenPack> optionalZenPack = repository.findByZenPackId(zenPackId);
+		if(optionalZenPack.isPresent()){
+			optionalZenPack.get().setInActive(inActive);
+			repository.save(optionalZenPack.get());
+		}
+		return "ZenPack id "+ zenPackId + " has Successfully set to " +inActive ;
+	}
+
+	public Page<Report> searchReport(SearchRequest request) {
+		SearchSpecification<Report> specification = new SearchSpecification<>(request);
+		Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+		return reportRepository.findAll(specification, pageable);
+	}
+
+	public Page<ReportColumns> searchReportColumns(SearchRequest searchRequest) {
+		SearchSpecification<ReportColumns> specification = new SearchSpecification<>(searchRequest);
+		Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
+		return reportColumnsRepository.findAll(specification,pageable);
 	}
 }
