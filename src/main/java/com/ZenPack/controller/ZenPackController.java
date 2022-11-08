@@ -12,15 +12,13 @@ import java.util.Map;
 import com.ZenPack.Dto.*;
 import com.ZenPack.excel.ZenPackExcelExporter;
 import com.ZenPack.exception.ZenPackException;
-import com.ZenPack.model.Report;
-import com.ZenPack.model.ReportColumns;
-import com.ZenPack.model.ZenPackReport;
-import com.ZenPack.repository.ExcelRepository;
-import com.ZenPack.repository.ReportHeaderRepository;
+import com.ZenPack.model.*;
+import com.ZenPack.repository.*;
 import com.ZenPack.service.Services.SpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +29,6 @@ import com.ZenPack.Specification.SearchRequest;
 import com.ZenPack.Specification.SortDirection;
 import com.ZenPack.Specification.SortRequest;
 import com.ZenPack.Specification.ZenpackOperator;
-import com.ZenPack.model.ZenPack;
-import com.ZenPack.repository.ZenPackRepository;
 import com.ZenPack.service.Impl.ZenPackServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -41,6 +37,12 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/v1")
 public class ZenPackController {
+
+//    @Autowired
+//    private ZenPackReportRepository zenPackReportRepository;
+//
+//    @Autowired
+//    private ReportRepository reportRepository;
 
     @Autowired
     private ZenPackServiceImpl service;
@@ -56,6 +58,7 @@ public class ZenPackController {
 
     @Autowired
     private ReportHeaderRepository reportHeaderRepo;
+
 
 
     @PostMapping("/save")
@@ -195,9 +198,19 @@ public class ZenPackController {
         return service.save(zenPackReportDto);
     }
 
-
     @GetMapping("/list_report")
     public List<Report> getAllReport(){
         return service.getAllReports();
     }
+
+    @GetMapping("/getReportWithZenPack/{reportId}")
+    public ResponseEntity<List<ReportZenPackDto>> getReportWithZenPackReport(@PathVariable("reportId") int reportId ){
+        ResponseEntity<List<ReportZenPackDto>> response = service.getReportWithZenPackReprort(reportId);
+        return new ResponseEntity<>(response.getBody(),response.getStatusCode());
+    }
+
+//    @PostMapping("/saveZenPackReport")
+//    public ResponseEntity<ReportZenPackDto> createZenPackReport(@RequestBody ReportZenPackDto reportZenPackDto){
+//        return service.save(reportZenPackDto);
+//    }
 }

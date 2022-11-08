@@ -2,6 +2,7 @@ package com.ZenPack.service.Services;
 
 import java.util.List;
 
+import com.ZenPack.Dto.ReportZenPackDto;
 import com.ZenPack.Dto.ZenPackReportDto;
 import com.ZenPack.exception.ZenPackException;
 import com.ZenPack.model.Report;
@@ -34,4 +35,7 @@ public interface  ZenPackService {
     ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto);
 
     List<Report> getAllReports();
+
+//    ResponseEntity<ReportZenPackDto> save(ReportZenPackDto reportZenPackDto);
+
 }

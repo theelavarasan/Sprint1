@@ -11,6 +11,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import com.ZenPack.Dto.ReportZenPackDto;
 import com.ZenPack.Dto.ZenPackReportDto;
 import com.ZenPack.Specification.SortDirection;
 import com.ZenPack.exception.ZenPackException;
@@ -167,20 +168,7 @@ public class ZenPackServiceImpl implements ZenPackService {
 		return "ZenPack "+zenPackId+" Set InActive Successful";
 	}
 
-	@Override
-	public ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto) {
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setAmbiguityIgnored(true);
-		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
-		zenPackReportRepository.save(zenPackReport);
-		zenPackReportDto.setId(zenPackReport.getId());
-		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
-		zenPackReportDto.setQuickAccess(zenPackReport.isAnalytics());
-		zenPackReportDto.setDashBoard(zenPackReport.isDashBoard());
-		zenPackReport.setAddToFavorite(zenPackReport.isAddToFavorite());
-		zenPackReport.setFavoriteViewName(zenPackReport.getFavoriteViewName());
-		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
-	}
+
 
 	@Override
 	public List<Report> getAllReports() {
@@ -236,4 +224,45 @@ public class ZenPackServiceImpl implements ZenPackService {
 		Pageable pageable = SearchSpecification.getPageable(searchRequest.getPage(), searchRequest.getSize());
 		return reportColumnsRepository.findAll(specification,pageable);
 	}
+
+	public ResponseEntity<List<ReportZenPackDto>> getReportWithZenPackReprort(int reportId) {
+
+		List<ReportZenPackDto> reportDto = zenPackReportRepository.findAll(reportId);
+
+		return new ResponseEntity<>(reportDto,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto) {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setAmbiguityIgnored(true);
+		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
+		zenPackReportRepository.save(zenPackReport);
+		zenPackReportDto.setId((int) zenPackReport.getZenpackReportId());
+		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
+		zenPackReportDto.setQuickAccess(zenPackReport.isQuickAccess());
+		zenPackReportDto.setDashBoard(zenPackReport.isDashboard());
+		zenPackReportDto.setAddToFavorite(zenPackReport.isAddToFavorite());
+		zenPackReportDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
+//		zenPackReportDto.setReports(zenPackReport.getReports());
+//		zenPackReportDto.setChartCount(zenPackReportDto.getChartCount());
+//		zenPackReportDto.setValidationRuleCount(zenPackReportDto.getValidationRuleCount());
+		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
+	}
+
+//	@Override
+//	public ResponseEntity<ReportZenPackDto> save(ReportZenPackDto reportZenPackDto) {
+//		ModelMapper mapper = new ModelMapper();
+//		mapper.getConfiguration().setAmbiguityIgnored(true);
+//		ZenPackReport zenPackReport =mapper.map(reportZenPackDto,ZenPackReport.class);
+//		zenPackReportRepository.save(zenPackReport);
+//		reportZenPackDto.setId((int) zenPackReport.getZenpackReportId());
+//		reportZenPackDto.setFeature(zenPackReport.get);
+//		reportZenPackDto.setAnalytics(zenPackReport.isAnalytics());
+//		reportZenPackDto.setQuickAccess(zenPackReport.isAnalytics());
+//		reportZenPackDto.setDashboard(zenPackReport.isDashboard());
+//		reportZenPackDto.setAddToFavorite(zenPackReport.isAddToFavorite());
+//		reportZenPackDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
+//		return new ResponseEntity<>(reportZenPackDto,HttpStatus.CREATED);
+//	}
 }
