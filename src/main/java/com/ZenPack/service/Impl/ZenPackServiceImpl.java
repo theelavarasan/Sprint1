@@ -237,32 +237,19 @@ public class ZenPackServiceImpl implements ZenPackService {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setAmbiguityIgnored(true);
 		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
+		zenPackReport.setAnalytics(zenPackReport.isAnalytics());
+		zenPackReport.setQuickAccess(zenPackReport.isQuickAccess());
+		zenPackReport.setDashboard(zenPackReport.isDashboard());
+		zenPackReport.setAddToFavorite(zenPackReport.isAddToFavorite());
+		zenPackReport.setFavoriteViewName(zenPackReport.getFavoriteViewName());
 		zenPackReportRepository.save(zenPackReport);
-		zenPackReportDto.setId((int) zenPackReport.getZenpackReportId());
+		zenPackReportDto.setZenpackReportId((int) zenPackReport.getZenpackReportId());
 		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
 		zenPackReportDto.setQuickAccess(zenPackReport.isQuickAccess());
 		zenPackReportDto.setDashBoard(zenPackReport.isDashboard());
 		zenPackReportDto.setAddToFavorite(zenPackReport.isAddToFavorite());
 		zenPackReportDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
 //		zenPackReportDto.setReports(zenPackReport.getReports());
-//		zenPackReportDto.setChartCount(zenPackReportDto.getChartCount());
-//		zenPackReportDto.setValidationRuleCount(zenPackReportDto.getValidationRuleCount());
 		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
 	}
-
-//	@Override
-//	public ResponseEntity<ReportZenPackDto> save(ReportZenPackDto reportZenPackDto) {
-//		ModelMapper mapper = new ModelMapper();
-//		mapper.getConfiguration().setAmbiguityIgnored(true);
-//		ZenPackReport zenPackReport =mapper.map(reportZenPackDto,ZenPackReport.class);
-//		zenPackReportRepository.save(zenPackReport);
-//		reportZenPackDto.setId((int) zenPackReport.getZenpackReportId());
-//		reportZenPackDto.setFeature(zenPackReport.get);
-//		reportZenPackDto.setAnalytics(zenPackReport.isAnalytics());
-//		reportZenPackDto.setQuickAccess(zenPackReport.isAnalytics());
-//		reportZenPackDto.setDashboard(zenPackReport.isDashboard());
-//		reportZenPackDto.setAddToFavorite(zenPackReport.isAddToFavorite());
-//		reportZenPackDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
-//		return new ResponseEntity<>(reportZenPackDto,HttpStatus.CREATED);
-//	}
 }
