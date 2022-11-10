@@ -1,11 +1,13 @@
 package com.ZenPack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -13,12 +15,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "report_columns")
-public class ReportColumns {
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+public class ReportColumns implements Serializable {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "report_data_id")
-	private String reportDataId;
+	private long reportDataId;
 	
 	@Column(name = "device_type")
 	private String deviceType;
@@ -67,9 +70,16 @@ public class ReportColumns {
 	
 	@Column(name = "hide")
 	private boolean hide;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "zen_pack_report_id", referencedColumnName = "zen_pack_report_id")
+	private ZenPackReport zenPackReport;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "zen_pack_id", referencedColumnName = "zen_pack_id")
+	private ZenPack zenPackId;
 	
-//	@Column(name = "zen_pack_report_id")
-//	private long zenPackReportId;
+
 	
 
 }

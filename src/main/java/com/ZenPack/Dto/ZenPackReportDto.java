@@ -11,14 +11,27 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ZenPackReportDto {
-    private Integer zenpackReportId;
+    private long zenpackReportId;
+
     private boolean isAnalytics;
+
     private boolean isQuickAccess;
-    private boolean isDashBoard;
+
+    private boolean isDashboard;
+
     private boolean addToFavorite;
+
     private String favoriteViewName;
-    private List<Report> reports= new ArrayList<>();
+
+    private long reportId;
+//    private List<Report> report;
+
+    private long zenPackId;
+
     private int chartCount =0;
+
+    private String reportDataId;
+
     private int validationRuleCount=0;
 
 }

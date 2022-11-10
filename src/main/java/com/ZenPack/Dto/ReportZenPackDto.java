@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ReportZenPackDto {
 
-    private Integer id;
+    private long id;
     private String feature;
     private String category;
     private String osType;
@@ -19,7 +19,7 @@ public class ReportZenPackDto {
     private String favoriteViewName;
     private int chartCount =0;
     private int validationRuleCount=0;
-    public ReportZenPackDto(int id, String feature, String category, String osType, String discoveryType,
+    public ReportZenPackDto(long id, String feature, String category, String osType, String discoveryType,
                             String analyticsBy, boolean isAnalytics, boolean isQuickAccess, boolean isDashboard, boolean addToFavorite,
                             String favoriteViewName) {
         super();

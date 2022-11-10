@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import com.ZenPack.Dto.ReportZenPackDto;
+import com.ZenPack.Dto.ZenPackReportColumnDto;
 import com.ZenPack.Dto.ZenPackReportDto;
 import com.ZenPack.Specification.SortDirection;
 import com.ZenPack.exception.ZenPackException;
@@ -232,24 +233,42 @@ public class ZenPackServiceImpl implements ZenPackService {
 		return new ResponseEntity<>(reportDto,HttpStatus.OK);
 	}
 
-	@Override
-	public ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto) {
+//	@Override
+//	public ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto) {
+//		ModelMapper mapper = new ModelMapper();
+//		mapper.getConfiguration().setAmbiguityIgnored(true);
+//		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
+//		zenPackReport.setAnalytics(zenPackReport.isAnalytics());
+//		zenPackReport.setQuickAccess(zenPackReport.isQuickAccess());
+//		zenPackReport.setDashboard(zenPackReport.isDashboard());
+//		zenPackReport.setAddToFavorite(zenPackReport.isAddToFavorite());
+//		zenPackReport.setFavoriteViewName(zenPackReport.getFavoriteViewName());
+//		zenPackReportRepository.save(zenPackReport);
+//		zenPackReportDto.setZenpackReportId((int) zenPackReport.getZenpackReportId());
+//		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
+//		zenPackReportDto.setQuickAccess(zenPackReport.isQuickAccess());
+//		zenPackReportDto.setDashBoard(zenPackReport.isDashboard());
+//		zenPackReportDto.setAddToFavorite(zenPackReport.isAddToFavorite());
+//		zenPackReportDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
+////		zenPackReportDto.setReports(zenPackReport.getReports());
+//		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
+//	}
+
+	public ZenPackReport createReportForZenPack(ZenPackReportDto report) {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setAmbiguityIgnored(true);
-		ZenPackReport zenPackReport =mapper.map(zenPackReportDto,ZenPackReport.class);
-		zenPackReport.setAnalytics(zenPackReport.isAnalytics());
-		zenPackReport.setQuickAccess(zenPackReport.isQuickAccess());
-		zenPackReport.setDashboard(zenPackReport.isDashboard());
-		zenPackReport.setAddToFavorite(zenPackReport.isAddToFavorite());
-		zenPackReport.setFavoriteViewName(zenPackReport.getFavoriteViewName());
-		zenPackReportRepository.save(zenPackReport);
-		zenPackReportDto.setZenpackReportId((int) zenPackReport.getZenpackReportId());
-		zenPackReportDto.setAnalytics(zenPackReport.isAnalytics());
-		zenPackReportDto.setQuickAccess(zenPackReport.isQuickAccess());
-		zenPackReportDto.setDashBoard(zenPackReport.isDashboard());
-		zenPackReportDto.setAddToFavorite(zenPackReport.isAddToFavorite());
-		zenPackReportDto.setFavoriteViewName(zenPackReport.getFavoriteViewName());
-//		zenPackReportDto.setReports(zenPackReport.getReports());
-		return new ResponseEntity<>(zenPackReportDto,HttpStatus.CREATED);
+		ZenPackReport zenPack = mapper.map(report, ZenPackReport.class);
+		zenPack.setReport(reportRepository.getReferenceById(report.getReportId()));
+		zenPack.setZenPackId(repository.getReferenceById((report.getZenPackId())));
+		return zenPackReportRepository.save(zenPack);
+	}
+
+	public ReportColumns createReportColumnForZenPack(ZenPackReportColumnDto report) {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setAmbiguityIgnored(true);
+		ReportColumns reportColumns = mapper.map(report, ReportColumns.class);
+		reportColumns.setZenPackReport(reportColumnsRepository.getReferenceById(report.getZen_pack_report_id()));
+		reportColumns.setZenPackId(reportColumnsRepository.getReferenceById(report.getZenPackId()));
+		return reportColumnsRepository.save(reportColumns);
 	}
 }

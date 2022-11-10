@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "zen_pack_report")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+
 public class ZenPackReport implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "zen_pack_report_id")
-    private Integer zenpackReportId;
+    private Long zenpackReportId;
 
     @Column(name = "is_analytics")
     private boolean isAnalytics;
@@ -41,8 +44,13 @@ public class ZenPackReport implements Serializable{
     @Column(name = "favorite_view_name")
     private String favoriteViewName;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    List<Report> reports = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "report_id", referencedColumnName = "report_id")
+    private Report report;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "zen_pack_id", referencedColumnName = "zen_pack_id")
+    private ZenPack zenPackId;
 
 
 

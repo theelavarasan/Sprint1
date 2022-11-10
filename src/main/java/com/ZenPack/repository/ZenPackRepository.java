@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.ZenPack.model.ZenPack;
 
 @Repository
-public interface ZenPackRepository extends JpaRepository<ZenPack,Integer>, JpaSpecificationExecutor<ZenPack> {
+public interface ZenPackRepository extends JpaRepository<ZenPack,Long>, JpaSpecificationExecutor<ZenPack> {
 
     void deleteByZenPackId(Long zenPackId);
 

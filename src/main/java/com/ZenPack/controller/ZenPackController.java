@@ -193,10 +193,10 @@ public class ZenPackController {
         return service.searchReportColumns(getSearchRequest(request));
     }
 
-    @PostMapping("/createZenPackReport")
-    public ResponseEntity<ZenPackReportDto> createZenPackReport(@RequestBody ZenPackReportDto zenPackReportDto){
-        return service.save(zenPackReportDto);
-    }
+//    @PostMapping("/createZenPackReport")
+//    public ResponseEntity<ZenPackReportDto> createZenPackReport(@RequestBody ZenPackReportDto zenPackReportDto){
+//        return service.save(zenPackReportDto);
+//    }
 
     @GetMapping("/list_report")
     public List<Report> getAllReport(){
@@ -209,10 +209,21 @@ public class ZenPackController {
         return new ResponseEntity<>(response.getBody(),response.getStatusCode());
     }
 
-//    @PostMapping("/saveZenPackReport")
-//    public ResponseEntity<ReportZenPackDto> createZenPackReport(@RequestBody ReportZenPackDto reportZenPackDto){
-//        return service.save(reportZenPackDto);
-//    }
+    @PostMapping("/createReportForZenPack")
+    ResponseEntity<ZenPackReport> createZenPackReport(@RequestBody ZenPackReportDto report){
+        return new ResponseEntity<>(service.createReportForZenPack(report),HttpStatus.OK);
+    }
+
+    @PostMapping("/createReportColumnForZenPack")
+    ResponseEntity<ReportColumns> createZenPackReportColumn(@RequestBody ZenPackReportColumnDto report){
+        return new ResponseEntity<>(service.createReportColumnForZenPack(report),HttpStatus.OK);
+    }
+
+
+
+
+
+
 
 
 }

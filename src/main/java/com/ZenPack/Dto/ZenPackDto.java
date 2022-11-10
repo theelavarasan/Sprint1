@@ -12,7 +12,7 @@ import java.util.*;
 @Setter
 //@Builder
 public class ZenPackDto {
-    private Long zenPackId;
+    private long zenPackId;
     private String name;
     private String createdBy;
     private String createdDate;

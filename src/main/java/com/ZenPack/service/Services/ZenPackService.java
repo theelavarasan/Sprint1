@@ -32,7 +32,7 @@ public interface  ZenPackService {
 
     String setActiveOrInActive(Long zenPackId);
 
-    ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto);
+//    ResponseEntity<ZenPackReportDto> save(ZenPackReportDto zenPackReportDto);
 
     List<Report> getAllReports();
 

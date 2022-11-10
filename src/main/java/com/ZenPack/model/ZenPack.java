@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.ZenPack.Dto.FeatureDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -30,6 +31,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "zen_pack")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class) 
 public class ZenPack {
 
