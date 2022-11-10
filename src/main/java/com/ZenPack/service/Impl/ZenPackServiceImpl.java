@@ -61,6 +61,7 @@ public class ZenPackServiceImpl implements ZenPackService {
 	@Autowired
 	private ReportColumnsRepository reportColumnsRepository;
 
+
 	@Autowired
 	private CommonFunctions commonFunctions;
 
@@ -267,8 +268,8 @@ public class ZenPackServiceImpl implements ZenPackService {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setAmbiguityIgnored(true);
 		ReportColumns reportColumns = mapper.map(report, ReportColumns.class);
-		reportColumns.setZenPackReport(reportColumnsRepository.getReferenceById(report.getZen_pack_report_id()));
-		reportColumns.setZenPackId(reportColumnsRepository.getReferenceById(report.getZenPackId()));
+		reportColumns.setZenPackReport(zenPackReportRepository.getReferenceById(report.getZen_pack_report_id()));
+//		reportColumns.setZenPackId(repository.getReferenceById(report.getZenPackId()));
 		return reportColumnsRepository.save(reportColumns);
 	}
 }

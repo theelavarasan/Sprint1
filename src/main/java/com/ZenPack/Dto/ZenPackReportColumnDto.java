@@ -26,6 +26,5 @@ public class ZenPackReportColumnDto {
 
     private long zen_pack_report_id;
 
-    private long zenPackId;
 
 }

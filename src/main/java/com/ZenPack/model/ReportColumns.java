@@ -75,9 +75,9 @@ public class ReportColumns implements Serializable {
 	@JoinColumn(name = "zen_pack_report_id", referencedColumnName = "zen_pack_report_id")
 	private ZenPackReport zenPackReport;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "zen_pack_id", referencedColumnName = "zen_pack_id")
-	private ZenPack zenPackId;
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "zen_pack_id", referencedColumnName = "zen_pack_id")
+//	private ZenPack zenPackId;
 	
 
 	
